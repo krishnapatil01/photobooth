@@ -1,0 +1,16 @@
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\controller\AuthController.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\repository\PhotoRepository.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\repository\UserRepository.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\service\UserService.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\service\PhotoService.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\config\SecurityConfig.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\model\Photo.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\model\User.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\service\CustomUserDetailsService.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\model\Album.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\controller\CustomErrorController.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\controller\DashboardController.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\PhotoboothApplication.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\repository\AlbumRepository.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\controller\ApiController.java
+C:\Users\acer\Downloads\photobooth\src\main\java\com\photobooth\service\AlbumService.java

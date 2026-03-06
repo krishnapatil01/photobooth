@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+    <div th:fragment="topbar" class="topbar">
+        <div class="topbar-left">
+            <button class="hamburger" onclick="toggleSidebar()" id="hamburgerBtn">☰</button>
+            <div class="breadcrumb">
+                <span class="breadcrumb-item">📷 RETRO BOOTH</span>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <div class="ticker-tape">
+                <span>📸 CAPTURE MEMORIES &nbsp;•&nbsp; 🎞️ DEVELOP YOUR STORY &nbsp;•&nbsp; ⭐ CHERISH FOREVER
+                    &nbsp;•&nbsp;</span>
+            </div>
+            <div class="user-badge" th:if="${user != null}">
+                <div class="user-avatar">
+                    <span
+                        th:text="${user.displayName != null ? user.displayName.substring(0,1).toUpperCase() : 'U'}">U</span>
+                </div>
+                <span class="user-name" th:text="${user.displayName != null ? user.displayName : 'User'}">User</span>
+            </div>
+            <div class="user-badge" th:unless="${user != null}">
+                <div class="user-avatar"><span sec:authentication="name" th:text="'?'">U</span></div>
+                <span class="user-name" sec:authentication="name">User</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
