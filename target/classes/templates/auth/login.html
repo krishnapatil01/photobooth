@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Retro Photobooth - Login</title>
+    <meta name="description" content="Login to your Retro Digital Photobooth - capture memories in style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body class="auth-body">
+    <div class="film-strip-top"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="camera-icon">📷</div>
+                <h1 class="logo-text">RETRO BOOTH</h1>
+                <p class="logo-sub">★ DIGITAL PHOTO STUDIO ★</p>
+            </div>
+
+            <div class="auth-divider">
+                <span>— SIGN IN —</span>
+            </div>
+
+            <div th:if="${error}" class="alert alert-error">
+                <span>⚠️</span> <span th:text="${error}"></span>
+            </div>
+            <div th:if="${message}" class="alert alert-success">
+                <span>✅</span> <span th:text="${message}"></span>
+            </div>
+            <div th:if="${param.registered}" class="alert alert-success">
+                <span>🎉</span> Registration successful! Please login.
+            </div>
+
+            <form th:action="@{/login}" method="post" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">USERNAME</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" name="username" class="form-input" placeholder="Enter your username" required autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">PASSWORD</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" name="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="login-btn">
+                    <span>INSERT COIN TO CONTINUE</span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>New here? <a th:href="@{/register}" class="auth-link">Create an account →</a></p>
+            </div>
+
+            <div class="polaroid-deco">
+                <div class="polaroid p1">📷</div>
+                <div class="polaroid p2">🌟</div>
+                <div class="polaroid p3">🎞️</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="film-strip-bottom"></div>
+    <script th:src="@{/js/auth.js}"></script>
+</body>
+</html>

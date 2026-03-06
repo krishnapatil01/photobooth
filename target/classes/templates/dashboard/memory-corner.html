@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Retro Photobooth - Memory Corner</title>
+    <meta name="description" content="Your Memory Corner - cherished photo memories">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div th:replace="~{fragments/topbar :: topbar}"></div>
+        <div class="page-content">
+            <div class="page-header">
+                <h2 class="page-title">⭐ MEMORY CORNER</h2>
+                <p class="page-subtitle">Your most precious moments, named and remembered forever</p>
+            </div>
+
+            <div th:if="${photos == null or #lists.isEmpty(photos)}" class="empty-state memory-empty">
+                <div class="empty-icon">📂</div>
+                <p>No photos saved yet!</p>
+                <p class="hint-text">Start taking photos to see them displayed here.</p>
+                <a th:href="@{/photobooth}" class="btn-primary-small">Go to Photobooth</a>
+            </div>
+
+            <div class="memory-wall" th:unless="${photos == null or #lists.isEmpty(photos)}">
+                <div class="memory-polaroid" th:each="photo : ${photos}" th:id="'photo-' + ${photo.id}"
+                    th:classappend="${photo.strip ? 'is-strip' : ''}">
+                    <div class="polaroid-frame" th:onclick="'openPhotoViewer(' + ${photo.id} + ', event)'">
+                        <img th:src="${photo.imageData}" th:alt="${photo.name}"
+                            th:class="'polaroid-photo filter-' + ${photo.filter != null ? photo.filter : 'none'}">
+                    </div>
+                    <div class="polaroid-caption">
+                        <!-- Hidden elements for JS edit modal -->
+                        <span class="photo-name" style="display:none" th:text="${photo.name}"></span>
+                        <span class="photo-memory" style="display:none" th:text="${photo.memoryTitle}"></span>
+
+                        <p class="memory-title-text"
+                            th:text="${photo.memoryTitle != null and !photo.memoryTitle.isEmpty() ? photo.memoryTitle : photo.name}">
+                            Memory</p>
+                        <p class="memory-date" th:if="${photo.createdAt != null}"
+                            th:text="${#temporals.format(photo.createdAt, 'MMMM dd, yyyy')}">Date</p>
+                    </div>
+                    <div class="polaroid-actions">
+                        <button class="polaroid-btn view-btn" title="View"
+                            th:onclick="'openPhotoViewer(' + ${photo.id} + ', event)'">👁️</button>
+                        <button class="polaroid-btn edit-btn" title="Edit"
+                            th:onclick="'openEditModal(' + ${photo.id} + '); event.stopPropagation();'">✏️</button>
+                        <button class="polaroid-btn delete-btn" title="Delete"
+                            th:onclick="'deletePhoto(' + ${photo.id} + '); event.stopPropagation();'">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Viewer Modal -->
+    <div class="modal-overlay" id="photoViewerModal">
+        <div class="modal-card modal-viewer">
+            <button class="modal-close viewer-close" onclick="closePhotoViewer()">✕</button>
+            <div class="viewer-body">
+                <img id="viewerImg" src="" alt="Photo" class="viewer-img">
+                <div class="viewer-info">
+                    <h3 id="viewerName">Photo Name</h3>
+                    <p id="viewerMemory"></p>
+                    <div class="viewer-actions">
+                        <button class="btn-secondary" onclick="downloadViewerPhoto()">⬇️ Download</button>
+                        <button class="btn-secondary" onclick="printViewerPhoto()">🖨️ Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Photo Modal -->
+    <div class="modal-overlay" id="editPhotoModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>✏️ EDIT MEMORY</h3>
+                <button class="modal-close" onclick="closeEditModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editPhotoId">
+                <div class="form-group">
+                    <label class="form-label">PHOTO NAME</label>
+                    <input type="text" id="editPhotoName" class="form-input" placeholder="Photo name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">MEMORY TITLE ✨</label>
+                    <input type="text" id="editMemoryTitle" class="form-input" placeholder="Memory description">
+                </div>
+                <button class="btn-primary" onclick="saveEditPhoto()">💾 SAVE CHANGES</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/gallery.js}"></script>
+</body>
+
+</html>

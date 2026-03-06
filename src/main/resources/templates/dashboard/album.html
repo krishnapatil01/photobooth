@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Retro Photobooth - Album</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main-content">
+        <div th:replace="~{fragments/topbar :: topbar}"></div>
+        <div class="page-content">
+            <div class="page-header">
+                <div>
+                    <a th:href="@{/gallery}" class="back-link">← Back to Gallery</a>
+                    <h2 class="page-title">📁 <span th:text="${album != null ? album.name : 'Album'}">Album Name</span>
+                    </h2>
+                    <p class="page-subtitle" th:if="${album != null}" th:text="${album.description}">Description</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn-secondary-small" th:if="${album != null}"
+                        th:onclick="'deleteAlbum(' + ${album.id} + ')'">🗑️ Delete Album</button>
+                    <a th:href="@{/photobooth}" class="btn-capture">📷 Add Photos</a>
+                </div>
+            </div>
+
+            <div th:if="${photos == null or #lists.isEmpty(photos)}" class="empty-state">
+                <div class="empty-icon">📷</div>
+                <p>No photos in this album yet.</p>
+                <a th:href="@{/photobooth}" class="btn-primary-small">Take Photos to Add</a>
+            </div>
+
+            <div class="photo-masonry" th:unless="${photos == null or #lists.isEmpty(photos)}">
+                <div class="photo-card-lg" th:each="photo : ${photos}" th:id="'photo-' + ${photo.id}"
+                    th:classappend="${photo.strip ? 'is-strip' : ''}">
+                    <div class="photo-frame-lg">
+                        <img th:src="${photo.imageData}" th:alt="${photo.name}"
+                            th:class="'photo-img filter-' + ${photo.filter != null ? photo.filter : 'none'}">
+                        <div class="photo-actions-overlay" th:onclick="'openPhotoViewer(' + ${photo.id} + ', event)'">
+                            <button class="action-btn view-btn"
+                                th:onclick="'openPhotoViewer(' + ${photo.id} + ', event)'">👁️</button>
+                            <button class="action-btn edit-btn"
+                                th:onclick="'openEditModal(' + ${photo.id} + '); event.stopPropagation();'">✏️</button>
+                            <button class="action-btn delete-btn"
+                                th:onclick="'deletePhoto(' + ${photo.id} + '); event.stopPropagation();'">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="photo-label">
+                        <p class="photo-name" th:text="${photo.name}">Photo</p>
+                        <p class="photo-memory" th:if="${photo.memoryTitle != null and !photo.memoryTitle.isEmpty()}"
+                            th:text="'✨ ' + ${photo.memoryTitle}"></p>
+                        <div class="photo-meta">
+                            <span class="filter-badge"
+                                th:text="${photo.filter != null ? photo.filter : 'none'}">filter</span>
+                            <span class="date-badge" th:if="${photo.createdAt != null}"
+                                th:text="${#temporals.format(photo.createdAt, 'MMM dd')}">date</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Viewer Modal -->
+    <div class="modal-overlay" id="photoViewerModal">
+        <div class="modal-card modal-viewer">
+            <button class="modal-close viewer-close" onclick="closePhotoViewer()">✕</button>
+            <div class="viewer-body">
+                <img id="viewerImg" src="" alt="Photo" class="viewer-img">
+                <div class="viewer-info">
+                    <h3 id="viewerName">Photo Name</h3>
+                    <p id="viewerMemory"></p>
+                    <div class="viewer-actions">
+                        <button class="btn-secondary" onclick="downloadViewerPhoto()">⬇️ Download</button>
+                        <button class="btn-secondary" onclick="printViewerPhoto()">🖨️ Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Photo Modal -->
+    <div class="modal-overlay" id="editPhotoModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>✏️ EDIT PHOTO</h3>
+                <button class="modal-close" onclick="closeEditModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editPhotoId">
+                <div class="form-group">
+                    <label class="form-label">PHOTO NAME</label>
+                    <input type="text" id="editPhotoName" class="form-input" placeholder="Photo name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">MEMORY TITLE ✨</label>
+                    <input type="text" id="editMemoryTitle" class="form-input" placeholder="Memory description">
+                </div>
+                <button class="btn-primary" onclick="saveEditPhoto()">💾 SAVE CHANGES</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/gallery.js}"></script>
+    <script th:src="@{/js/albums.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Retro Photobooth - Register</title>
+    <meta name="description" content="Create your Retro Digital Photobooth account">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body class="auth-body">
+    <div class="film-strip-top"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="camera-icon">📷</div>
+                <h1 class="logo-text">RETRO BOOTH</h1>
+                <p class="logo-sub">★ JOIN THE STUDIO ★</p>
+            </div>
+
+            <div class="auth-divider">
+                <span>— CREATE ACCOUNT —</span>
+            </div>
+
+            <div th:if="${error}" class="alert alert-error">
+                <span>⚠️</span> <span th:text="${error}"></span>
+            </div>
+
+            <form th:action="@{/register}" method="post" class="auth-form" id="register-form">
+                <div class="form-group">
+                    <label class="form-label">DISPLAY NAME</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">✨</span>
+                        <input type="text" name="displayName" class="form-input" placeholder="Your creative name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">USERNAME</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" name="username" class="form-input" placeholder="Choose a username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">EMAIL</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📧</span>
+                        <input type="email" name="email" class="form-input" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">PASSWORD</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" name="password" id="password" class="form-input" placeholder="Create a password" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">CONFIRM PASSWORD</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔐</span>
+                        <input type="password" id="confirm-password" class="form-input" placeholder="Repeat your password" required>
+                    </div>
+                    <span class="field-error" id="password-error"></span>
+                </div>
+
+                <button type="submit" class="btn-primary" id="register-btn">
+                    <span>🎞️ START YOUR JOURNEY</span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already a member? <a th:href="@{/login}" class="auth-link">Sign in →</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="film-strip-bottom"></div>
+    <script th:src="@{/js/auth.js}"></script>
+</body>
+</html>
