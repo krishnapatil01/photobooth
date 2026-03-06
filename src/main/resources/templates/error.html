@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Retro Photobooth - Error</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            background: radial-gradient(ellipse at center, #1a0e05, #0a0500);
+        }
+
+        .error-code {
+            font-family: var(--font-display);
+            font-size: 6rem;
+            color: var(--retro-gold);
+            text-shadow: 0 0 40px rgba(240, 192, 64, 0.4);
+            line-height: 1;
+        }
+
+        .error-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            letter-spacing: 4px;
+            color: var(--retro-amber);
+        }
+
+        .error-msg {
+            color: rgba(245, 230, 200, 0.6);
+            max-width: 500px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .error-detail {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(200, 134, 10, 0.3);
+            padding: 1rem;
+            max-width: 600px;
+            font-size: 0.75rem;
+            color: rgba(245, 230, 200, 0.4);
+            text-align: left;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--retro-amber);
+            color: var(--retro-dark);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-code">
+        <span th:text="${statusCode != null ? statusCode : '500'}">500</span>
+    </div>
+    <div class="error-title" th:text="${errorTitle != null ? errorTitle : 'SOMETHING WENT WRONG'}">ERROR</div>
+    <p class="error-msg" th:text="${errorMessage}">An unexpected error occurred.</p>
+
+    <div class="error-detail" th:if="${exDetail != null}">
+        <strong>Details:</strong> <span th:text="${exDetail}"></span>
+    </div>
+
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
+        <a href="/dashboard" class="btn-home">🏠 Go to Dashboard</a>
+        <a href="javascript:history.back()" class="btn-home"
+            style="background:transparent;border:2px solid var(--retro-amber);color:var(--retro-amber);">← Go Back</a>
+    </div>
+</body>
+
+</html>

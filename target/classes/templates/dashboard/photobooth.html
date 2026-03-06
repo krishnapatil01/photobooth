@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Retro Photobooth - Camera</title>
+    <meta name="description" content="Take photos with retro filters in your digital photobooth">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/retro.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/photobooth.css}">
+    <style>
+        /* Ensure camera controls are always visible */
+        .photobooth-page {
+            overflow-y: auto;
+        }
+
+        .booth-layout {
+            align-items: start;
+        }
+
+        .camera-housing {
+            max-width: 560px;
+            width: 100%;
+        }
+
+        .viewfinder {
+            max-height: 340px;
+        }
+
+        #videoFeed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transform: scaleX(-1);
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+        <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+        <div class="page-content photobooth-page">
+
+            <!-- Mode Toggle -->
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="singleModeBtn" onclick="setMode('single')">
+                    📷 SINGLE SHOT
+                </button>
+                <button class="mode-btn" id="stripModeBtn" onclick="setMode('strip')">
+                    🎞️ PHOTO STRIP (4 shots)
+                </button>
+            </div>
+
+            <div class="booth-layout">
+                <!-- Camera Section -->
+                <div class="camera-section">
+                    <div class="camera-housing">
+                        <div class="camera-header">
+                            <span class="brand-text">RETRO-O-MATIC 3000</span>
+                            <div class="rec-indicator" id="recIndicator">
+                                <span class="rec-dot"></span> LIVE
+                            </div>
+                        </div>
+
+                        <!-- Viewfinder -->
+                        <div class="viewfinder" id="viewfinder">
+                            <video id="videoFeed" autoplay playsinline muted></video>
+                            <canvas id="filterCanvas" style="display:none;"></canvas>
+                            <div class="vf-overlay">
+                                <div class="vf-corner tl"></div>
+                                <div class="vf-corner tr"></div>
+                                <div class="vf-corner bl"></div>
+                                <div class="vf-corner br"></div>
+                                <div class="crosshair"></div>
+                            </div>
+                            <!-- Countdown overlay -->
+                            <div class="countdown-overlay" id="countdownOverlay">
+                                <span id="countdownNum">3</span>
+                            </div>
+                            <!-- Flash overlay -->
+                            <div class="flash-overlay" id="flashOverlay"></div>
+                        </div>
+
+                        <!-- Strip Preview (4 photos) -->
+                        <div class="strip-preview" id="stripPreview" style="display:none;">
+                            <div class="strip-frames">
+                                <div class="strip-frame" id="frame1"><span>1</span></div>
+                                <div class="strip-frame" id="frame2"><span>2</span></div>
+                                <div class="strip-frame" id="frame3"><span>3</span></div>
+                                <div class="strip-frame" id="frame4"><span>4</span></div>
+                            </div>
+                            <p class="strip-hint" id="stripHint">Take 4 photos for your film strip!</p>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="camera-controls">
+                            <button class="ctrl-btn" id="undoBtn" onclick="undoLastShot()" title="Undo Last Shot"
+                                style="display:none;">
+                                ↩️
+                            </button>
+                            <button class="ctrl-btn" id="retakeBtn" onclick="retakePhoto()" title="Retake"
+                                style="display:none;">
+                                🔄
+                            </button>
+                            <button class="shutter-btn" id="shutterBtn" onclick="capturePhoto(event)">
+                                <div class="shutter-inner"></div>
+                            </button>
+                            <button class="ctrl-btn" id="saveBtn" onclick="openSaveModal(event)" title="Save"
+                                style="display:none;">
+                                💾
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel -->
+                <div class="right-panel">
+                    <!-- Filters -->
+                    <div class="panel-section">
+                        <h3 class="panel-title">🎨 FILTERS</h3>
+                        <div class="filters-grid">
+                            <div class="filter-item active" onclick="applyFilter('none')" data-filter="none">
+                                <div class="filter-preview fp-none">No Filter</div>
+                                <span>ORIGINAL</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('vintage')" data-filter="vintage">
+                                <div class="filter-preview fp-vintage">Vintage</div>
+                                <span>VINTAGE</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('sepia')" data-filter="sepia">
+                                <div class="filter-preview fp-sepia">Sepia</div>
+                                <span>SEPIA</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('noir')" data-filter="noir">
+                                <div class="filter-preview fp-noir">Noir</div>
+                                <span>NOIR B&W</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('faded')" data-filter="faded">
+                                <div class="filter-preview fp-faded">Faded</div>
+                                <span>FADED</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('chrome')" data-filter="chrome">
+                                <div class="filter-preview fp-chrome">Chrome</div>
+                                <span>CHROME</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('lomo')" data-filter="lomo">
+                                <div class="filter-preview fp-lomo">Lomo</div>
+                                <span>LOMOGRAPHY</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('polaroid')" data-filter="polaroid">
+                                <div class="filter-preview fp-polaroid">Polar</div>
+                                <span>POLAROID</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('sunset')" data-filter="sunset">
+                                <div class="filter-preview fp-sunset">Sunset</div>
+                                <span>SUNSET</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('cool')" data-filter="cool">
+                                <div class="filter-preview fp-cool">Cool</div>
+                                <span>COOL BLUE</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('warm')" data-filter="warm">
+                                <div class="filter-preview fp-warm">Warm</div>
+                                <span>WARM GLOW</span>
+                            </div>
+                            <div class="filter-item" onclick="applyFilter('dreamy')" data-filter="dreamy">
+                                <div class="filter-preview fp-dreamy">Dream</div>
+                                <span>DREAMY</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Captured Preview -->
+                    <div class="panel-section" id="previewSection" style="display:none;">
+                        <h3 class="panel-title">🖼️ PREVIEW</h3>
+                        <div class="captured-preview">
+                            <img id="capturedImg" src="" alt="Captured photo" class="preview-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Modal -->
+    <div class="modal-overlay" id="saveModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>💾 SAVE YOUR MEMORY</h3>
+                <button class="modal-close" onclick="closeSaveModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="save-preview-wrap">
+                    <img id="savePreviewImg" src="" alt="Preview" class="save-preview-img">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">PHOTO NAME</label>
+                    <input type="text" id="photoName" class="form-input" placeholder="Give your photo a name...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">MEMORY TITLE ✨ (optional)</label>
+                    <input type="text" id="memoryTitle" class="form-input"
+                        placeholder="Describe this special moment...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">SAVE TO ALBUM (optional)</label>
+                    <select id="albumSelect" class="form-select">
+                        <option value="">— No Album —</option>
+                        <option th:each="album : ${albums}" th:value="${album.id}" th:text="${album.name}"></option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="savePhoto()">💾 SAVE PHOTO</button>
+                    <button class="btn-secondary" onclick="downloadPhoto()">⬇️ DOWNLOAD</button>
+                    <button class="btn-secondary" onclick="printPhoto()">🖨️ PRINT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Strip Complete Modal -->
+    <div class="modal-overlay" id="stripModal">
+        <div class="modal-card modal-wide">
+            <div class="modal-header">
+                <h3>🎞️ YOUR PHOTO STRIP!</h3>
+                <button class="modal-close" onclick="closeStripModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="strip-result" id="stripResult">
+                    <canvas id="stripCanvas"></canvas>
+                </div>
+                <div class="form-group" style="margin-top:1rem;">
+                    <label class="form-label">STRIP NAME</label>
+                    <input type="text" id="stripName" class="form-input" placeholder="Name your film strip...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">MEMORY TITLE ✨</label>
+                    <input type="text" id="stripMemoryTitle" class="form-input"
+                        placeholder="Describe this film strip...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">SAVE TO ALBUM</label>
+                    <select id="stripAlbumSelect" class="form-select">
+                        <option value="">— No Album —</option>
+                        <option th:each="album : ${albums}" th:value="${album.id}" th:text="${album.name}"></option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="saveStrip()">💾 SAVE STRIP</button>
+                    <button class="btn-secondary" onclick="printStrip()">🖨️ PRINT STRIP</button>
+                    <button class="btn-secondary" onclick="retakeStrip()">🔄 RETAKE ALL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load dashboard.js FIRST so showToast and helpers are available -->
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/photobooth.js}"></script>
+</body>
+
+</html>

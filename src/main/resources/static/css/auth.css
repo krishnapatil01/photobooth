@@ -1,0 +1,232 @@
+/* ===== AUTH PAGE STYLES ===== */
+.auth-body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background:
+        radial-gradient(ellipse at top, #2a1205 0%, #1a0e05 60%);
+    position: relative;
+    overflow-y: auto;
+}
+
+.auth-body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 40px,
+            rgba(200, 134, 10, 0.03) 40px,
+            rgba(200, 134, 10, 0.03) 41px),
+        repeating-linear-gradient(90deg,
+            transparent,
+            transparent 60px,
+            rgba(200, 134, 10, 0.02) 60px,
+            rgba(200, 134, 10, 0.02) 61px);
+    pointer-events: none;
+}
+
+.auth-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /* Start from top to allow scrolling */
+    padding: 3rem 1rem;
+    /* More padding top/bottom */
+    position: relative;
+    z-index: 1;
+    overflow-y: auto;
+}
+
+.auth-card {
+    margin: auto;
+    /* This centers it perfectly while allowing scroll */
+    background: rgba(30, 15, 5, 0.95);
+    border: 3px solid var(--retro-amber);
+    max-width: 440px;
+    width: 100%;
+    padding: 2.5rem;
+    box-shadow:
+        0 0 60px rgba(200, 134, 10, 0.15),
+        8px 8px 0 rgba(0, 0, 0, 0.4),
+        inset 0 0 60px rgba(200, 134, 10, 0.03);
+    position: relative;
+    animation: cardReveal 0.6s ease;
+}
+
+@keyframes cardReveal {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.auth-card::before,
+.auth-card::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--retro-gold);
+    border-style: solid;
+}
+
+.auth-card::before {
+    top: -3px;
+    left: -3px;
+    border-width: 3px 0 0 3px;
+}
+
+.auth-card::after {
+    bottom: -3px;
+    right: -3px;
+    border-width: 0 3px 3px 0;
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.camera-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    animation: cameraPulse 3s ease-in-out infinite;
+}
+
+@keyframes cameraPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1) rotate(-3deg);
+    }
+}
+
+.logo-text {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    letter-spacing: 8px;
+    color: var(--retro-gold);
+    text-shadow: 0 0 20px rgba(240, 192, 64, 0.5);
+    margin: 0;
+}
+
+.logo-sub {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    color: var(--retro-amber);
+    margin-top: 0.25rem;
+}
+
+.auth-divider {
+    text-align: center;
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: var(--retro-amber);
+    opacity: 0.5;
+}
+
+.auth-divider::before {
+    left: 0;
+}
+
+.auth-divider::after {
+    right: 0;
+}
+
+.auth-divider span {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--retro-amber);
+}
+
+.auth-form {}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 0.75rem;
+    font-size: 1rem;
+    z-index: 1;
+}
+
+.input-wrapper .form-input {
+    padding-left: 2.5rem;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: rgba(245, 230, 200, 0.6);
+}
+
+.auth-link {
+    color: var(--retro-gold);
+    text-decoration: none;
+    font-family: var(--font-display);
+    letter-spacing: 1px;
+    transition: color 0.2s;
+}
+
+.auth-link:hover {
+    color: #ffe070;
+    text-decoration: underline;
+}
+
+/* Polaroid decorations */
+.polaroid-deco {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.polaroid {
+    background: var(--retro-paper);
+    padding: 0.5rem 0.5rem 1.5rem;
+    font-size: 1.5rem;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+    color: var(--retro-dark);
+}
+
+.polaroid.p1 {
+    transform: rotate(-8deg);
+}
+
+.polaroid.p2 {
+    transform: rotate(3deg) translateY(-5px);
+}
+
+.polaroid.p3 {
+    transform: rotate(-4deg);
+}
